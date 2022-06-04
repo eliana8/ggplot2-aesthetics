@@ -1,0 +1,483 @@
+---
+title: "Guide to ggplot2 Aesthetics"
+author: "Eliana Squire"
+date: "6/03/2022"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    toc: yes
+  md_document: default
+  pdf_document: default
+  html_document:
+    toc: yes
+    df_print: paged
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# Introduction
+
+This blog post is about personalizing the aesthetics of `ggplot2` figures in R. I became interested in this topic when regularly completing assignments in R. I wanted my figures to look nice, and I enjoy visually appealing colors and shapes. 
+
+Data visualization is highly valuable: it allows audiences to gain a better understanding of data. Whether presenting data for a  casual school environment or a more formal work environment, there are great ways to improve figures for any audience.
+
+# Overview
+
+I begin by discussing labeling elements using `labs`. Then, I move to customizing text elements with `theme` and `element_text`. After, I discuss ways to alter the plot styles and characteristics with `theme`, `element_rect`, and `element_line`. Next, I demonstrate customizing scatter plots and bar charts. Finally, I show the animation of `ggplot2` figures 
+
+# Altering text using `labs`
+
+Here is a relatively simple scatter plot using the built-in `mtcars` dataset. 
+
+```{r}
+library(ggplot2) # Load ggplot2 package 
+
+figure1 = 
+  ggplot(data = mtcars, # data
+         aes(x = wt, # x-axis, weight
+             y= mpg)) + # y-axis, miles per gallon
+  geom_point() # scatter plot
+
+figure1 # print figure
+```
+
+It is difficult to tell what this graph is about by looking at it. There is no title, and the axis labels are a bit unclear. In order to clarify, use `labs` to add a title, an x-axis label, and a y-axis label. 
+
+Arguments of `labs` include:
+
+- **title** = text for the title
+
+- **subtitle** = text for the subtitle, displayed below the title
+
+- **caption** = text for the caption, displayed in the bottom-right of the plot 
+
+- **x** = text for x-axis label
+
+- **y** = text for y-axis label
+
+It is important to note that `labs` can be labeled for future use.
+
+```{r}
+labs1 = 
+  labs(x ="Car Weight (1000 lbs)", # x-axis label
+       y ="Miles per U.S. gallon", # y-axis label
+       title = "Figure 1: Miles per Gallon vs Weight") # plot title
+figure1 + labs1
+```
+
+The graph looks much better with the labels. Now, it is clear what the plot is about. I am moving on to `theme` elements to demonstrate further customization options. 
+
+
+# Label characteristics
+
+We can change elements of the labels using `element_text` through `theme`
+
+The arguments of `theme` demonstrated here include:
+
+- `plot.title` = text for plot title
+  
+- `axis.title` = text for title
+  
+  - `axis.title.x` = text for x-axis label
+      
+  - `axis.title.y`= text for y-axis label
+      
+- `axis.text` = text for values of x-axis and y-axis
+  
+  - `axis.text.x` = text for values on x-axis
+    
+  - `axis.text.y` = text for values on y-axis
+
+We can also use `element_text` to apply arguments to all text in the plot.
+
+The arguments of `element_text` are as follows:
+
+- **family** = font family
+  
+- **face** = font face ("plain", "italic", "bold", "bold.italic")
+  
+- **color** = font color
+  
+- **size** = font size
+  
+- **hjust** = horizontal justification (in [0,1])
+  
+- **vjust** = vertical justification (in [0,1])
+  
+- **angle** = angle (in [0,360])
+  
+- **lineheight** = line height
+  
+- **margin** = margins around the text
+  
+  - **t, r, b, l** = dimensions of each margin (top, right, bottom, left)
+
+## Demonstration
+
+```{r}
+figure1 + # Original figure
+  
+  labs1 + # Labels of figure
+  
+  theme(   # Theme function
+       plot.title =   # Plot title customizations 
+          element_text(family = "Comic Sans MS",
+                       face = "bold",
+                       color = "red",
+                       hjust = 0.5, # Horizontal adjust - title to center 
+                       size = 14), # Font size
+        
+        axis.title.x = # x-axis label customization
+          element_text(family = "Times New Roman",
+                       face = "italic",
+                       color = "blue",
+                       size = 11), # Font size
+        
+        axis.title.y = # y-axis label customization
+          element_text(family = "Courier",
+                       face = "plain",
+                       color = "green",
+                       size = 13), # Font size
+    
+        axis.text.x =  # x-axis text customization
+          element_text(color = "orange", # font color
+                       size = 12,
+                       angle = 330), 
+        
+        axis.text.y = # y-axis text customization
+          element_text(color = "pink", 
+                       size = 10,
+                       angle = 90)
+       ) # End of theme function
+```
+
+This plot is not visually appealing, but the varying colors and fonts help demonstrate the different pieces that can be altered. 
+
+## Create reproducible theme
+
+Themes can also be labeled for future use, so it is only necessary to include the code for the theme once. This is not only visually cleaner, but also less work. Below is the code that I use to alter the labels on my own graphs. I adjust the plot title to the center, customize the font sizes, and alter the margins to allow for more space. 
+
+
+```{r}
+# Label theme to easily add to graphs
+mytheme = 
+ theme( # Theme function
+  
+       plot.title = # Plot title 
+          element_text(hjust = 0.5, # Horizontal adjust - title to center 
+                       size = 14, # Font size
+                       margin = margin(t = 10, b = 10)), # Top & bottom margins
+        
+        axis.title = # Axis labels customization
+          element_text(size = 12, 
+                       margin = margin(t = 12, r = 12, # Top & right margins
+                                       b = 12, l = 12)), # Bottom & left margins
+        
+        axis.text.x =  # x-axis text customization
+          element_text(color = "black", # Font color
+                       size = 10, 
+                       margin = margin(t = 5, b = 5)), 
+        
+        axis.text.y = # y-axis text customization
+          element_text(color = "black", 
+                       size = 10,
+                       margin = margin(r = 5, l = 5))
+       ) # End of theme function
+```
+
+## Label Results
+
+You can see the results of this theme. Below, I add the original figure, the saved labs, and the saved theme. 
+
+```{r}
+figure1_2 =
+  figure1 + 
+  labs1 + 
+  mytheme
+
+figure1_2
+```
+
+It looks much nicer than the previous graphs. 
+
+# Plot Styles
+
+The arguments of `theme` demonstrated here include:
+
+- `plot.background` = background of the entire plot
+  
+- `panel.background` = background of plotting area, drawn underneath plot
+      
+- `panel.grid` =  grid lines
+  
+  - `panel.grid.major` = major grid lines
+    
+  - `panel.grid.minor` = minor grid lines
+
+Beyond `element_text`, the functions `element_rect` and `element_line` also contribute to figure aesthetics.
+
+Available line types for `element_line`: "blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash"
+
+## Example
+
+```{r}
+figure1_3 =
+  figure1 +
+  labs1 +
+  theme( # Theme function
+        plot.background = 
+          element_rect(fill = "skyblue"), # Fill of entire plot background
+        
+        panel.background = 
+          element_rect(fill = "lightcyan"), # Fill of plotting area background
+        
+         panel.grid.minor = 
+          element_line(linetype = "dashed",  # Type of Line
+                       color = "darkgreen"), # Color of Line
+        
+        panel.grid.major = 
+          element_line(linetype = "solid",
+                       color = "skyblue"),
+        
+        axis.line = 
+          element_line(size = 2, # Size of Line
+                       linetype = "twodash",
+                       color = "grey80"),
+        
+        axis.ticks = 
+          element_line(size = 3, 
+                       color = "orange")
+        ) # End of theme function
+
+figure1_3
+```
+
+This plot is not visually appealing, but the varying colors and patterns help demonstrate the different pieces that can be altered. 
+
+## Final theme and results
+
+The theme can be updated by adding further theme elements to the current saved theme. I have included the theme elements I frequently use.
+
+```{r}
+mytheme =
+  mytheme +
+  theme(plot.background = 
+          element_rect(fill = "lavender"),
+        
+        panel.background = 
+          element_rect(fill = "white"),
+        
+         panel.grid.minor = 
+          element_line(linetype = "solid", 
+                       color = "grey92"),
+        
+        panel.grid.major = 
+          element_line(linetype = "solid",
+                       color = "grey90"),
+        
+        axis.line = 
+          element_line(size = .3, 
+                       linetype = "solid",
+                       color = "grey50"),
+        
+        axis.ticks =
+          element_line(color = "black", 
+                       size = 1))
+```
+
+Here is the result of combining the original figure, the text, and the saved theme.
+
+```{r}
+fig1 = 
+  figure1 + 
+  labs1 + 
+  mytheme
+
+fig1
+```
+
+This final graph is more visually appealing than previous plots. 
+
+## Comparison
+
+Below is a comparison of the four plots made using the `patchwork` package.
+
+```{r, echo}
+library(patchwork)
+figure1 + figure1_2 + figure1_3 + fig1 +  plot_layout(nrow = 2)
+```
+
+# Scatter plots
+
+In a scatter plot, it's possible to change the color of the points based on a certain factor by using `geom_point` (then **color** = as.factor(variable). This can help demonstrate further information about the data. 
+
+`geom_point` can also be used to change the size and shape of the points.
+
+I'm going to further customize the most recent plot by changing the color of the points to represent the number of gears a car has.
+
+## Example
+
+```{r}
+fig1_2 = 
+  ggplot(data = mtcars, # data
+         aes(x = wt, # x-axis, weight
+             y= mpg)) + # y-axis, miles per gallon
+  
+  geom_point(aes(color = as.factor(gear)), # Scatter plot with gear as factor
+             size = 2.5, # Size of points
+             shape = 8) + # Shape of points
+  
+  scale_color_manual(values = # Change colors of values
+                       c("3" = "aquamarine3", 
+                         "4" = "mediumpurple",
+                         "5" = "orchid3"),
+                     name = "# of Gears") + # Legend Title  
+  
+  mytheme + # Add previous theme 
+  
+  labs1 # Add labels
+
+fig1_2 
+```
+The teal points represent cars with 3 gears, the purple points represent cars with 4 gears, and the pink points represent cars with five gears.
+
+## Comparison
+
+Below is a comparison of the previously finalized plot and the updated version with `gear` as a factor. 
+
+```{r}
+fig1 + fig1_2 + plot_layout(ncol = 2)
+```
+
+# Bar chart
+
+Bar charts (`geom_bar`) can be altered much like scattered plots. 
+
+## Legend customization 
+
+`Theme` elements relating to legends:
+
+- `legend.background` = background of legend (element_rect())
+
+- `legend.position` = position of legends ("none", "left", "right", "bottom", "top")
+
+- `legend.direction` = layout of items in legends ("horizontal" or "vertical")
+
+- `legend.margin` = the margin around each legend (margin())
+
+- `legend.title` = title of legend (element_text())
+
+- `legend.title.align` = alignment of legend title (from 0 (left) to 1 (right))
+
+- `legend.text` = legend item labels (element_text())
+
+- `legend.text.align` = alignment of legend labels (from 0 (left) to 1 (right))
+
+## Example
+
+Below is a basic bar chart demonstrating the frequency of each level of gears in the dataset (3, 4, and 5). The variable for the fill of `geom_bar` can't consist of just numbers, so I rename them using `mutate` from the `dplyr` package. Then, `gears` is a factor representing the numerical values in `gear`.
+
+```{r}
+library(dplyr) # Use dplyr for mutate function
+
+mtcars =
+  mutate(   # Mutate function
+    mtcars, # Data
+    gears = # Mutatation of gear
+       ifelse(gear == 3, "(3)", # If 'gear' is 3, value in 'gears' is '(3)' 
+       ifelse(gear == 4, "(4)", # If 'gear' is 4, value in 'gears' is '(4)'
+                         "(5)")) # If neither of these is true, value in 'gears' is '(5)'
+         ) 
+figure2 = 
+  ggplot(mtcars, # Data
+         aes(x = gear)) + # X is gear as a factor
+  
+  geom_bar( # Bar chart function
+    aes(fill = gears) # Colors of bar chart are varying levels of gears
+    )  # End of bar chart function
+
+figure2
+
+```
+
+## Result
+
+I improve the previous bar chart by adding axis and title labels, manually choosing the colors of the bars using `scale_fill_manual`, removing the legend using `theme` and `legend_position`, and finally adding the precreated theme.
+
+```{r}
+# Create labs
+
+labs2 = 
+  labs(x ="Number of Gears", # x-axis label
+       y ="Count", # y-axis label
+       title = "Figure 2: Count of Number of Gears") # Title
+
+
+# Add 
+fig2 = 
+  figure2 + 
+  
+  scale_fill_manual(values =  # Chnange colors of bars manually
+                      c("aquamarine3", "mediumpurple", "orchid3")) +
+  
+  labs2 +
+  
+  theme(legend.position="none") + # remove legend
+  
+  mytheme # Add theme
+
+fig2
+```
+
+# Animating ggplot graphs
+
+Animation can be added to pre-xisting ggplot figures with the fuction `ggplotly` from the package `plotly`. 
+
+Hover over the points to find out more information. Using the option in the top right corner, you can also download plots as a png, zoom, select, and compare data on hover.
+
+## Figure 1 animated
+
+Here is an animated version of figure 1. 
+
+```{r}
+library(plotly) # Load plotly package
+
+ggplotly(fig1_2) # Animate figure 1
+```
+
+## Figure 2 animated
+
+```{r}
+ggplotly(fig2)
+```
+
+# Conclusion
+
+There are many ways to customize ggplot2 figures. I have barely scratched the surface in this post, but this is a good start for those that are unfamiliar.  
+
+# Other resources 
+
+Here are some other resources for personalizing the aesthics of a ggplot2 figure.
+
+- [List of ggplot2 colors](http://sape.inf.usi.ch/quick-reference/ggplot2/colour)
+
+- [Plotly's ggplot2 page](https://plotly.com/ggplot2/)
+
+- [R Documentation page on ggplot2](https://www.rdocumentation.org/packages/ggplot2/versions/3.3.6)
+
+- [R Documentation page on ggplot2](https://www.rdocumentation.org/packages/ggplot2/versions/3.3.6/topics/theme)
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
