@@ -6,11 +6,7 @@ output:
   prettydoc::html_pretty:
     theme: cayman
     toc: yes
-  md_document: default
   pdf_document: default
-  html_document:
-    toc: yes
-    df_print: paged
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
