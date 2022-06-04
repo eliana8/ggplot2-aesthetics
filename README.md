@@ -1,5 +1,7 @@
 # Guide to `ggplot2` Aesthetics
 
+## Github pages: https://eliana8.github.io/ggplot2-aesthetics/
+
 This blog post is about personalizing the aesthetics of `ggplot2` figures in R. I became interested in this topic when regularly completing assignments in R. I wanted my figures to look nice, and I enjoy visually appealing colors and shapes. 
 
 Data visualization is highly valuable: it allows audiences to gain a better understanding of data. Whether presenting data for a  casual school environment or a more formal work environment, there are great ways to improve figures for any audience.
